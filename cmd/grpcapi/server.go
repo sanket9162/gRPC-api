@@ -8,12 +8,15 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/sanket9162/grpc-api/internal/api/handlers"
+	"github.com/sanket9162/grpc-api/internal/repositories/mongodb"
 	pb "github.com/sanket9162/grpc-api/proto/gen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 func main() {
+
+	mongodb.CreateMongoClient()
 
 	err := godotenv.Load("../../.env")
 	if err != nil {
