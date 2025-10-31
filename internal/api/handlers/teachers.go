@@ -32,6 +32,7 @@ func (s *Server) AddTeachers(ctx context.Context, req *pb.Teachers) (*pb.Teacher
 
 func (s *Server) GetTeachers(ctx context.Context, req *pb.GetTeachersRequest) (*pb.Teachers, error) {
 	filterTeacher(req)
+	sortOptions(req.GetSortBy())
 
 	return nil, nil
 }
@@ -70,4 +71,18 @@ func filterTeacher(req *pb.GetTeachersRequest) {
 	}
 
 	fmt.Println("Filter:", filter)
+}
+
+func sortOptions(sortFields []*pb.SortField) bson.D {
+	var sortOption bson.D
+
+	for _, sortField := range sortFields {
+		order := 1
+		if sortField.GetOrder() == pb.Order_DESC {
+			order = -1
+		}
+		sortOption = append(sortOption, bson.E{Key: sortField.Field, Value: order})
+	}
+	fmt.Println("Sort option :", sortOption)
+	return sortOption
 }
