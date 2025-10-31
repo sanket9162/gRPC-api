@@ -278,7 +278,7 @@ func (x *GetStudentsRequest) GetPageSize() int32 {
 type SortField struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Field         string                 `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
-	Order         string                 `protobuf:"bytes,2,opt,name=order,proto3" json:"order,omitempty"`
+	Order         Order                  `protobuf:"varint,2,opt,name=order,proto3,enum=main.Order" json:"order,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -320,11 +320,11 @@ func (x *SortField) GetField() string {
 	return ""
 }
 
-func (x *SortField) GetOrder() string {
+func (x *SortField) GetOrder() Order {
 	if x != nil {
 		return x.Order
 	}
-	return ""
+	return Order_ASC
 }
 
 type Student struct {
@@ -466,10 +466,10 @@ const file_students_proto_rawDesc = "" +
 	"\asort_by\x18\x02 \x03(\v2\x0f.main.SortFieldR\x06sortBy\x12\x1f\n" +
 	"\vpage_number\x18\x03 \x01(\x05R\n" +
 	"pageNumber\x12\x1b\n" +
-	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"7\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"D\n" +
 	"\tSortField\x12\x14\n" +
-	"\x05field\x18\x01 \x01(\tR\x05field\x12\x14\n" +
-	"\x05order\x18\x02 \x01(\tR\x05order\"\x81\x01\n" +
+	"\x05field\x18\x01 \x01(\tR\x05field\x12!\n" +
+	"\x05order\x18\x02 \x01(\x0e2\v.main.OrderR\x05order\"\x81\x01\n" +
 	"\aStudent\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
 	"\n" +
@@ -516,20 +516,21 @@ var file_students_proto_depIdxs = []int32{
 	2, // 0: main.StudentIds.ids:type_name -> main.StudentId
 	7, // 1: main.GetStudentsRequest.Student:type_name -> main.Students
 	5, // 2: main.GetStudentsRequest.sort_by:type_name -> main.SortField
-	6, // 3: main.Students.students:type_name -> main.Student
-	4, // 4: main.StudentsService.GetStudents:input_type -> main.GetStudentsRequest
-	7, // 5: main.StudentsService.AddStudents:input_type -> main.Students
-	7, // 6: main.StudentsService.UpdateStudents:input_type -> main.Students
-	3, // 7: main.StudentsService.DeleteStudents:input_type -> main.StudentIds
-	7, // 8: main.StudentsService.GetStudents:output_type -> main.Students
-	7, // 9: main.StudentsService.AddStudents:output_type -> main.Students
-	7, // 10: main.StudentsService.UpdateStudents:output_type -> main.Students
-	1, // 11: main.StudentsService.DeleteStudents:output_type -> main.DeleteStudentsConfirmation
-	8, // [8:12] is the sub-list for method output_type
-	4, // [4:8] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	0, // 3: main.SortField.order:type_name -> main.Order
+	6, // 4: main.Students.students:type_name -> main.Student
+	4, // 5: main.StudentsService.GetStudents:input_type -> main.GetStudentsRequest
+	7, // 6: main.StudentsService.AddStudents:input_type -> main.Students
+	7, // 7: main.StudentsService.UpdateStudents:input_type -> main.Students
+	3, // 8: main.StudentsService.DeleteStudents:input_type -> main.StudentIds
+	7, // 9: main.StudentsService.GetStudents:output_type -> main.Students
+	7, // 10: main.StudentsService.AddStudents:output_type -> main.Students
+	7, // 11: main.StudentsService.UpdateStudents:output_type -> main.Students
+	1, // 12: main.StudentsService.DeleteStudents:output_type -> main.DeleteStudentsConfirmation
+	9, // [9:13] is the sub-list for method output_type
+	5, // [5:9] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_students_proto_init() }

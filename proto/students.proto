@@ -33,7 +33,7 @@ message GetStudentsRequest{
 
 message SortField {
     string field = 1;
-    string order = 2;
+    Order order = 2;
 }
 
 enum Order {
