@@ -46,6 +46,7 @@ message Teacher{
     string last_name = 3;
     string email = 4;
     string class = 5;
+    string subject = 6;
 }
 
 message Teachers {

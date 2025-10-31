@@ -272,6 +272,7 @@ type Teacher struct {
 	LastName      string                 `protobuf:"bytes,3,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
 	Email         string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
 	Class         string                 `protobuf:"bytes,5,opt,name=class,proto3" json:"class,omitempty"`
+	Subject       string                 `protobuf:"bytes,6,opt,name=subject,proto3" json:"subject,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -341,6 +342,13 @@ func (x *Teacher) GetClass() string {
 	return ""
 }
 
+func (x *Teacher) GetSubject() string {
+	if x != nil {
+		return x.Subject
+	}
+	return ""
+}
+
 type Teachers struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Teachers      []*Teacher             `protobuf:"bytes,1,rep,name=teachers,proto3" json:"teachers,omitempty"`
@@ -405,14 +413,15 @@ const file_main_proto_rawDesc = "" +
 	"\x03ids\x18\x01 \x03(\v2\x0f.main.TeacherIdR\x03ids\"g\n" +
 	"\x12GetTeachersRequest\x12'\n" +
 	"\ateacher\x18\x01 \x01(\v2\r.main.TeacherR\ateacher\x12(\n" +
-	"\asort_by\x18\x02 \x03(\v2\x0f.main.SortFieldR\x06sortBy\"\x81\x01\n" +
+	"\asort_by\x18\x02 \x03(\v2\x0f.main.SortFieldR\x06sortBy\"\x9b\x01\n" +
 	"\aTeacher\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
 	"\n" +
 	"first_name\x18\x02 \x01(\tR\tfirstName\x12\x1b\n" +
 	"\tlast_name\x18\x03 \x01(\tR\blastName\x12\x14\n" +
 	"\x05email\x18\x04 \x01(\tR\x05email\x12\x14\n" +
-	"\x05class\x18\x05 \x01(\tR\x05class\"5\n" +
+	"\x05class\x18\x05 \x01(\tR\x05class\x12\x18\n" +
+	"\asubject\x18\x06 \x01(\tR\asubject\"5\n" +
 	"\bTeachers\x12)\n" +
 	"\bteachers\x18\x01 \x03(\v2\r.main.TeacherR\bteachers2\xf5\x02\n" +
 	"\x0fTeachersService\x127\n" +
