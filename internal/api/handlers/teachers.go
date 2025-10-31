@@ -9,7 +9,9 @@ import (
 	"github.com/sanket9162/grpc-api/internal/models"
 	"github.com/sanket9162/grpc-api/internal/repositories/mongodb"
 	pb "github.com/sanket9162/grpc-api/proto/gen"
-	"go.mongodb.org/mongo-driver/v2/bson"
+	"github.com/sanket9162/grpc-api/utils"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -31,20 +33,32 @@ func (s *Server) AddTeachers(ctx context.Context, req *pb.Teachers) (*pb.Teacher
 }
 
 func (s *Server) GetTeachers(ctx context.Context, req *pb.GetTeachersRequest) (*pb.Teachers, error) {
-	filterTeacher(req)
-	sortOptions(req.GetSortBy())
+	filter, err := filterTeacher(req.Teacher)
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "Internal err")
+	}
+	sortOption := sortOptions(req.GetSortBy())
 
-	return nil, nil
+	teachers, err := mongodb.GetTeachersFromDB(ctx, sortOption, filter)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.Teachers{Teachers: teachers}, nil
 }
 
-func filterTeacher(req *pb.GetTeachersRequest) {
+func filterTeacher(teacherObj *pb.Teacher) (bson.M, error) {
 	filter := bson.M{}
+
+	if teacherObj == nil {
+		return filter, nil
+	}
 
 	var modelTeacher models.Teacher
 	modelVal := reflect.ValueOf(&modelTeacher).Elem()
 	modelType := modelVal.Type()
 
-	reqVal := reflect.ValueOf(req.Teacher).Elem()
+	reqVal := reflect.ValueOf(teacherObj).Elem()
 	reqType := reqVal.Type()
 
 	for i := 0; i < reqVal.NumField(); i++ {
@@ -66,11 +80,21 @@ func filterTeacher(req *pb.GetTeachersRequest) {
 		if fieldVal.IsValid() && !fieldVal.IsZero() {
 			bsonTag := modelType.Field(i).Tag.Get("bson")
 			bsonTag = strings.TrimSuffix(bsonTag, ",omitempty")
-			filter[bsonTag] = fieldVal.Interface().(string)
+			if bsonTag == "_id" {
+				objID, err := primitive.ObjectIDFromHex(teacherObj.Id)
+				if err != nil {
+					return nil, utils.ErrorHandler(err, "Invalid Id")
+				}
+				filter[bsonTag] = objID
+			} else {
+
+				filter[bsonTag] = fieldVal.Interface().(string)
+			}
 		}
 	}
 
 	fmt.Println("Filter:", filter)
+	return filter, nil
 }
 
 func sortOptions(sortFields []*pb.SortField) bson.D {

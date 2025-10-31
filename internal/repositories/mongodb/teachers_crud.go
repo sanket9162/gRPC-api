@@ -5,7 +5,10 @@ import (
 	"reflect"
 
 	pb "github.com/sanket9162/grpc-api/proto/gen"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/sanket9162/grpc-api/internal/models"
 	"github.com/sanket9162/grpc-api/utils"
@@ -40,6 +43,45 @@ func AddTeachersToDb(ctx context.Context, teachersFromreq []*pb.Teacher) ([]*pb.
 	}
 
 	return addedTeacher, nil
+}
+
+func GetTeachersFromDB(ctx context.Context, sortOption bson.D, filter bson.M) ([]*pb.Teacher, error) {
+	client, err := CreateMongoClient()
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "Internal Error")
+	}
+	defer client.Disconnect(ctx)
+
+	coll := client.Database("school").Collection("teacher")
+	var cursor *mongo.Cursor
+	if len(sortOption) < 1 {
+
+		cursor, err = coll.Find(ctx, filter)
+	} else {
+		cursor, err = coll.Find(ctx, filter, options.Find().SetSort(sortOption))
+	}
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "Internal Error")
+	}
+	defer cursor.Close(ctx)
+
+	var teachers []*pb.Teacher
+	for cursor.Next(ctx) {
+		var teacher models.Teacher
+		err := cursor.Decode(&teacher)
+		if err != nil {
+			return nil, utils.ErrorHandler(err, "Internal Error")
+		}
+		teachers = append(teachers, &pb.Teacher{
+			Id:        teacher.Id,
+			FirstName: teacher.FirstName,
+			LastName:  teacher.LastName,
+			Email:     teacher.Email,
+			Class:     teacher.Class,
+			Subject:   teacher.Subject,
+		})
+	}
+	return teachers, nil
 }
 
 func mapModelTeacherTopb(teacher *models.Teacher) *pb.Teacher {
