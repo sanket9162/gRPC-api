@@ -65,6 +65,14 @@ func GetTeachersFromDB(ctx context.Context, sortOption bson.D, filter bson.M) ([
 	}
 	defer cursor.Close(ctx)
 
+	teachers, err := decodeTeacher(ctx, cursor)
+	if err != nil {
+		return nil, err
+	}
+	return teachers, nil
+}
+
+func decodeTeacher(ctx context.Context, cursor *mongo.Cursor) ([]*pb.Teacher, error) {
 	var teachers []*pb.Teacher
 	for cursor.Next(ctx) {
 		var teacher models.Teacher
@@ -72,14 +80,21 @@ func GetTeachersFromDB(ctx context.Context, sortOption bson.D, filter bson.M) ([
 		if err != nil {
 			return nil, utils.ErrorHandler(err, "Internal Error")
 		}
-		teachers = append(teachers, &pb.Teacher{
-			Id:        teacher.Id,
-			FirstName: teacher.FirstName,
-			LastName:  teacher.LastName,
-			Email:     teacher.Email,
-			Class:     teacher.Class,
-			Subject:   teacher.Subject,
-		})
+		pbTeacher := &pb.Teacher{}
+		modelVal := reflect.ValueOf(teacher)
+		pbVal := reflect.ValueOf(pbTeacher).Elem()
+
+		for i := 0; i < modelVal.NumField(); i++ {
+			modelField := modelVal.Field(i)
+			modelFieldName := modelField.Type().Field(i).Name
+
+			pbField := pbVal.FieldByName(modelFieldName)
+			if pbField.IsValid() && pbField.CanSet() {
+				pbField.Set(modelField)
+			}
+		}
+
+		teachers = append(teachers, pbTeacher)
 	}
 	return teachers, nil
 }
