@@ -41,3 +41,12 @@ func (s *Server) GetTeachers(ctx context.Context, req *pb.GetTeachersRequest) (*
 
 	return &pb.Teachers{Teachers: teachers}, nil
 }
+
+func (s *Server) UpdateTeachers(ctx context.Context, req *pb.Teachers) (*pb.Teachers, error) {
+
+	updatedTeachers, err := mongodb.UpdateTeachersInDB(ctx, req.Teachers)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &pb.Teachers{Teachers: updatedTeachers}, nil
+}
