@@ -3,7 +3,6 @@ package mongodb
 import (
 	"context"
 	"fmt"
-	"reflect"
 
 	pb "github.com/sanket9162/grpc-api/proto/gen"
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,7 +23,7 @@ func AddTeachersToDb(ctx context.Context, teachersFromreq []*pb.Teacher) ([]*pb.
 
 	newTeachers := make([]*models.Teacher, len(teachersFromreq))
 	for i, pbTeacher := range teachersFromreq {
-		newTeachers[i] = MappbTeacherToModelTeacler(pbTeacher)
+		newTeachers[i] = MappbTeacherToModelTeacher(pbTeacher)
 	}
 
 	var addedTeacher []*pb.Teacher
@@ -39,7 +38,7 @@ func AddTeachersToDb(ctx context.Context, teachersFromreq []*pb.Teacher) ([]*pb.
 			teacher.Id = objectId.Hex()
 		}
 
-		pbTeacher := MapModelTeacherTopb(teacher)
+		pbTeacher := MapModelTeacherTopb(*teacher)
 		addedTeacher = append(addedTeacher, pbTeacher)
 	}
 
@@ -77,42 +76,6 @@ func newModel() *models.Teacher {
 	return &models.Teacher{}
 }
 
-func MapModelTeacherTopb(teacher *models.Teacher) *pb.Teacher {
-	pbTeacher := &pb.Teacher{}
-	modelVal := reflect.ValueOf(*teacher)
-	pbVal := reflect.ValueOf(pbTeacher).Elem()
-
-	for i := 0; i < modelVal.NumField(); i++ {
-		modelField := modelVal.Field(i)
-		modelFieldType := modelVal.Type().Field(i)
-
-		pbField := pbVal.FieldByName(modelFieldType.Name)
-		if pbField.IsValid() && pbField.CanSet() {
-			pbField.Set(modelField)
-		}
-	}
-	return pbTeacher
-}
-
-func MappbTeacherToModelTeacler(pbTeacher *pb.Teacher) *models.Teacher {
-	modelTeacher := models.Teacher{}
-	pbVal := reflect.ValueOf(pbTeacher).Elem()
-	modelVal := reflect.ValueOf(&modelTeacher).Elem()
-
-	for i := 0; i < pbVal.NumField(); i++ {
-		pbField := pbVal.Field(i)
-		fieldName := pbVal.Type().Field(i).Name
-
-		modelField := modelVal.FieldByName(fieldName)
-		if modelField.IsValid() && modelField.CanSet() {
-			modelField.Set(pbField)
-		}
-
-	}
-
-	return &modelTeacher
-}
-
 func UpdateTeachersInDB(ctx context.Context, pbTeachers []*pb.Teacher) ([]*pb.Teacher, error) {
 	client, err := CreateMongoClient()
 	if err != nil {
@@ -123,7 +86,7 @@ func UpdateTeachersInDB(ctx context.Context, pbTeachers []*pb.Teacher) ([]*pb.Te
 	var updatedTeachers []*pb.Teacher
 
 	for _, teacher := range pbTeachers {
-		modelTeacher := MappbTeacherToModelTeacler(teacher)
+		modelTeacher := MappbTeacherToModelTeacher(teacher)
 
 		objId, err := primitive.ObjectIDFromHex(teacher.Id)
 		if err != nil {
@@ -148,7 +111,7 @@ func UpdateTeachersInDB(ctx context.Context, pbTeachers []*pb.Teacher) ([]*pb.Te
 			return nil, utils.ErrorHandler(err, fmt.Sprintln("error updating teacher id:", teacher.Id))
 		}
 
-		updatedTecher := MapModelTeacherTopb(modelTeacher)
+		updatedTecher := MapModelTeacherTopb(*modelTeacher)
 
 		updatedTeachers = append(updatedTeachers, updatedTecher)
 	}
