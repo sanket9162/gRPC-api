@@ -63,6 +63,16 @@ func MapModelTeacherTopb(teacherModel models.Teacher) *pb.Teacher {
 
 }
 
+func MapModelExecTopb(execModel models.Exec) *pb.Exec {
+	return MapModelTopb(execModel, func() *pb.Exec { return &pb.Exec{} })
+
+}
+
+func MapModelStudentTopb(studetnModel models.Student) *pb.Student {
+	return MapModelTopb(studetnModel, func() *pb.Student { return &pb.Student{} })
+
+}
+
 func MappbToModel[P any, M any](pbStruct P, newModel func() *M) *M {
 	modelStruct := newModel()
 	pbVal := reflect.ValueOf(pbStruct).Elem()
@@ -84,4 +94,12 @@ func MappbToModel[P any, M any](pbStruct P, newModel func() *M) *M {
 
 func MappbTeacherToModelTeacher(pbTeacher *pb.Teacher) *models.Teacher {
 	return MappbToModel(pbTeacher, func() *models.Teacher { return &models.Teacher{} })
+}
+
+func MappbExecToModelExec(pbExec *pb.Exec) *models.Exec {
+	return MappbToModel(pbExec, func() *models.Exec { return &models.Exec{} })
+}
+
+func MappbStudentToModelStudent(pbStudent *pb.Student) *models.Student {
+	return MappbToModel(pbStudent, func() *models.Student { return &models.Student{} })
 }
