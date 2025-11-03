@@ -6,7 +6,9 @@ import (
 	"github.com/sanket9162/grpc-api/internal/models"
 	pb "github.com/sanket9162/grpc-api/proto/gen"
 	"github.com/sanket9162/grpc-api/utils"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func AddStudentToDb(ctx context.Context, studentFromReq []*pb.Student) ([]*pb.Student, error) {
@@ -24,7 +26,7 @@ func AddStudentToDb(ctx context.Context, studentFromReq []*pb.Student) ([]*pb.St
 	var addedStudent []*pb.Student
 
 	for _, student := range newStudents {
-		result, err := client.Database("school").Collection("execs").InsertOne(ctx, student)
+		result, err := client.Database("school").Collection("stucten").InsertOne(ctx, student)
 		if err != nil {
 			return nil, utils.ErrorHandler(err, "Error adding value to database")
 		}
@@ -38,4 +40,33 @@ func AddStudentToDb(ctx context.Context, studentFromReq []*pb.Student) ([]*pb.St
 	}
 
 	return addedStudent, nil
+}
+
+func GetStudentFromDB(ctx context.Context, sortOption bson.D, filter bson.M, pageNumber, pageSize int32) ([]*pb.Student, error) {
+	client, err := CreateMongoClient()
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "Internal Error")
+	}
+	defer client.Disconnect(ctx)
+
+	coll := client.Database("school").Collection("stucten")
+
+	findOptions := options.Find()
+	findOptions.SetSkip(int64((pageNumber - 1) * pageSize))
+	findOptions.SetLimit(int64(pageSize))
+
+	if len(sortOption) > 0 {
+		findOptions.SetSort(sortOption)
+	}
+	cursor, err := coll.Find(ctx, filter, findOptions)
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "Internal Error")
+	}
+	defer cursor.Close(ctx)
+
+	students, err := decodeEntities(ctx, cursor, func() *pb.Student { return &pb.Student{} }, newModel)
+	if err != nil {
+		return nil, err
+	}
+	return students, nil
 }

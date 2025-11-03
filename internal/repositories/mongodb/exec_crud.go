@@ -7,7 +7,10 @@ import (
 	"github.com/sanket9162/grpc-api/internal/models"
 	pb "github.com/sanket9162/grpc-api/proto/gen"
 	"github.com/sanket9162/grpc-api/utils"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func AddExecsToDb(ctx context.Context, execFromReq []*pb.Exec) ([]*pb.Exec, error) {
@@ -48,4 +51,30 @@ func AddExecsToDb(ctx context.Context, execFromReq []*pb.Exec) ([]*pb.Exec, erro
 	}
 
 	return addedExec, nil
+}
+
+func GetExecsFromDB(ctx context.Context, sortOption bson.D, filter bson.M) ([]*pb.Exec, error) {
+	client, err := CreateMongoClient()
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "Internal Error")
+	}
+	defer client.Disconnect(ctx)
+
+	coll := client.Database("school").Collection("exec")
+	var cursor *mongo.Cursor
+	if len(sortOption) < 1 {
+		cursor, err = coll.Find(ctx, filter)
+	} else {
+		cursor, err = coll.Find(ctx, filter, options.Find().SetSort(sortOption))
+	}
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "Internal Error")
+	}
+	defer cursor.Close(ctx)
+
+	execs, err := decodeEntities(ctx, cursor, func() *pb.Exec { return &pb.Exec{} }, newModel)
+	if err != nil {
+		return nil, err
+	}
+	return execs, nil
 }

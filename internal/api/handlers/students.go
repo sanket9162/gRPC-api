@@ -3,8 +3,10 @@ package handlers
 import (
 	"context"
 
+	"github.com/sanket9162/grpc-api/internal/models"
 	"github.com/sanket9162/grpc-api/internal/repositories/mongodb"
 	pb "github.com/sanket9162/grpc-api/proto/gen"
+	"github.com/sanket9162/grpc-api/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -23,4 +25,30 @@ func (s *Server) AddStudents(ctx context.Context, req *pb.Students) (*pb.Student
 	}
 	return &pb.Students{Students: addedStudent}, nil
 
+}
+
+func (s *Server) GetStudents(ctx context.Context, req *pb.GetStudentsRequest) (*pb.Students, error) {
+	filter, err := filter(req.Student, &models.Student{})
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "Internal err")
+	}
+	sortOption := sortOptions(req.GetSortBy())
+
+	pageNumber := req.GetPageNumber()
+	pageSize := req.GetPageSize()
+
+	if pageNumber < 1 {
+		pageNumber = 1
+	}
+
+	if pageSize < 2 {
+		pageSize = 10
+	}
+
+	students, err := mongodb.GetStudentFromDB(ctx, sortOption, filter, int32(pageNumber), int32(pageSize))
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.Students{Students: students}, nil
 }
