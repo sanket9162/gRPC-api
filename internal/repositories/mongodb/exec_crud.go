@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/sanket9162/grpc-api/internal/models"
@@ -72,9 +73,53 @@ func GetExecsFromDB(ctx context.Context, sortOption bson.D, filter bson.M) ([]*p
 	}
 	defer cursor.Close(ctx)
 
-	execs, err := decodeEntities(ctx, cursor, func() *pb.Exec { return &pb.Exec{} }, newModel)
+	execs, err := decodeEntities(ctx, cursor, func() *pb.Exec { return &pb.Exec{} }, func() *models.Exec {
+		return &models.Exec{}
+	})
 	if err != nil {
 		return nil, err
 	}
 	return execs, nil
+}
+
+func UpdateExecsInDB(ctx context.Context, pbExec []*pb.Exec) ([]*pb.Exec, error) {
+	client, err := CreateMongoClient()
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "internal err")
+	}
+	defer client.Disconnect(ctx)
+
+	var updatedExecs []*pb.Exec
+
+	for _, exec := range pbExec {
+		modelExec := MappbExecToModelExec(exec)
+
+		objId, err := primitive.ObjectIDFromHex(exec.Id)
+		if err != nil {
+			return nil, utils.ErrorHandler(err, "Invalid Id")
+		}
+
+		modelDoc, err := bson.Marshal(modelExec)
+		if err != nil {
+			return nil, utils.ErrorHandler(err, "internal error")
+		}
+
+		var updateDoc bson.M
+		err = bson.Unmarshal(modelDoc, &updateDoc)
+		if err != nil {
+			return nil, utils.ErrorHandler(err, "internal error")
+		}
+
+		delete(updateDoc, "_id")
+
+		_, err = client.Database("school").Collection("exec").UpdateOne(ctx, bson.M{"_id": objId}, bson.M{"$set": updateDoc})
+		if err != nil {
+			return nil, utils.ErrorHandler(err, fmt.Sprintln("error updating teacher id:", exec.Id))
+		}
+
+		updatedExec := MapModelExecTopb(*modelExec)
+
+		updatedExecs = append(updatedExecs, updatedExec)
+	}
+	return updatedExecs, nil
 }

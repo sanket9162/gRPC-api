@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/sanket9162/grpc-api/internal/models"
 	pb "github.com/sanket9162/grpc-api/proto/gen"
@@ -64,9 +65,53 @@ func GetStudentFromDB(ctx context.Context, sortOption bson.D, filter bson.M, pag
 	}
 	defer cursor.Close(ctx)
 
-	students, err := decodeEntities(ctx, cursor, func() *pb.Student { return &pb.Student{} }, newModel)
+	students, err := decodeEntities(ctx, cursor, func() *pb.Student { return &pb.Student{} }, func() *models.Student {
+		return &models.Student{}
+	})
 	if err != nil {
 		return nil, err
 	}
 	return students, nil
+}
+
+func UpdateStudentInDB(ctx context.Context, pbstudent []*pb.Student) ([]*pb.Student, error) {
+	client, err := CreateMongoClient()
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "internal err")
+	}
+	defer client.Disconnect(ctx)
+
+	var updatedStudents []*pb.Student
+
+	for _, student := range pbstudent {
+		modelStudent := MappbStudentToModelStudent(student)
+
+		objId, err := primitive.ObjectIDFromHex(student.Id)
+		if err != nil {
+			return nil, utils.ErrorHandler(err, "Invalid Id")
+		}
+
+		modelDoc, err := bson.Marshal(modelStudent)
+		if err != nil {
+			return nil, utils.ErrorHandler(err, "internal error")
+		}
+
+		var updateDoc bson.M
+		err = bson.Unmarshal(modelDoc, &updateDoc)
+		if err != nil {
+			return nil, utils.ErrorHandler(err, "internal error")
+		}
+
+		delete(updateDoc, "_id")
+
+		_, err = client.Database("school").Collection("exec").UpdateOne(ctx, bson.M{"_id": objId}, bson.M{"$set": updateDoc})
+		if err != nil {
+			return nil, utils.ErrorHandler(err, fmt.Sprintln("error updating teacher id:", student.Id))
+		}
+
+		updatedStudent := MapModelStudentTopb(*modelStudent)
+
+		updatedStudents = append(updatedStudents, updatedStudent)
+	}
+	return updatedStudents, nil
 }

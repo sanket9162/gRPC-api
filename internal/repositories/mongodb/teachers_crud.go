@@ -65,15 +65,13 @@ func GetTeachersFromDB(ctx context.Context, sortOption bson.D, filter bson.M) ([
 	}
 	defer cursor.Close(ctx)
 
-	teachers, err := decodeEntities(ctx, cursor, func() *pb.Teacher { return &pb.Teacher{} }, newModel)
+	teachers, err := decodeEntities(ctx, cursor, func() *pb.Teacher { return &pb.Teacher{} }, func() *models.Teacher {
+		return &models.Teacher{}
+	})
 	if err != nil {
 		return nil, err
 	}
 	return teachers, nil
-}
-
-func newModel() *models.Teacher {
-	return &models.Teacher{}
 }
 
 func UpdateTeachersInDB(ctx context.Context, pbTeachers []*pb.Teacher) ([]*pb.Teacher, error) {
