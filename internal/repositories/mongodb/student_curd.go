@@ -104,7 +104,7 @@ func UpdateStudentInDB(ctx context.Context, pbstudent []*pb.Student) ([]*pb.Stud
 
 		delete(updateDoc, "_id")
 
-		_, err = client.Database("school").Collection("exec").UpdateOne(ctx, bson.M{"_id": objId}, bson.M{"$set": updateDoc})
+		_, err = client.Database("school").Collection("stucten").UpdateOne(ctx, bson.M{"_id": objId}, bson.M{"$set": updateDoc})
 		if err != nil {
 			return nil, utils.ErrorHandler(err, fmt.Sprintln("error updating teacher id:", student.Id))
 		}
