@@ -48,3 +48,21 @@ func (s *Server) UpdateExecs(ctx context.Context, req *pb.Execs) (*pb.Execs, err
 	}
 	return &pb.Execs{Execs: updatedExecs}, nil
 }
+
+func (s *Server) DeleteTeachers(ctx context.Context, req *pb.TeacherIds) (*pb.DeleteTeachersConfirmation, error) {
+	ids := req.GetIds()
+	var teacherIdsToDelete []string
+	for _, v := range ids {
+		teacherIdsToDelete = append(teacherIdsToDelete, v.Id)
+	}
+	deletedIds, err := mongodb.DeleteTeacherFromDB(ctx, teacherIdsToDelete)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.DeleteTeachersConfirmation{
+		Status:     "Teachers successfully deleted",
+		DeletedIds: deletedIds,
+	}, nil
+
+}
