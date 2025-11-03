@@ -10,7 +10,6 @@ import (
 	"github.com/sanket9162/grpc-api/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -148,42 +147,4 @@ func DeleteStudentFromDB(ctx context.Context, studentIdsToDelete []string) ([]st
 		deletedIds[i] = id.Hex()
 	}
 	return deletedIds, nil
-}
-
-func GetStudentByTeacherIdFromDb(ctx context.Context, teacherId string) ([]*pb.Student, error) {
-	client, err := CreateMongoClient()
-	if err != nil {
-		return nil, utils.ErrorHandler(err, "internal error")
-	}
-	defer client.Disconnect(ctx)
-
-	objId, err := primitive.ObjectIDFromHex(teacherId)
-	if err != nil {
-		return nil, utils.ErrorHandler(err, "Invalid Teacher Id")
-	}
-
-	var teacher models.Teacher
-	err = client.Database("school").Collection("teacher").FindOne(ctx, bson.M{"_id": objId}).Decode(&teacher)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return nil, utils.ErrorHandler(err, "teacher not found")
-		}
-		return nil, utils.ErrorHandler(err, "internal error")
-	}
-
-	cursor, err := client.Database("school").Collection("stucten").Find(ctx, bson.M{"class": teacher.Class})
-	defer cursor.Close(ctx)
-
-	student, err := DecodeEntities(ctx, cursor, func() *pb.Student { return &pb.Student{} }, func() *models.Student { return &models.Student{} })
-	if err != nil {
-		return nil, utils.ErrorHandler(err, "internal error")
-	}
-
-	err = cursor.Err()
-	if err != nil {
-		return nil, utils.ErrorHandler(err, "internal error")
-	}
-
-	return student, nil
-
 }

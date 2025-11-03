@@ -73,7 +73,7 @@ func GetExecsFromDB(ctx context.Context, sortOption bson.D, filter bson.M) ([]*p
 	}
 	defer cursor.Close(ctx)
 
-	execs, err := decodeEntities(ctx, cursor, func() *pb.Exec { return &pb.Exec{} }, func() *models.Exec {
+	execs, err := DecodeEntities(ctx, cursor, func() *pb.Exec { return &pb.Exec{} }, func() *models.Exec {
 		return &models.Exec{}
 	})
 	if err != nil {
