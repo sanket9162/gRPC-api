@@ -68,3 +68,14 @@ func (s *Server) DeleteExecs(ctx context.Context, req *pb.ExecIds) (*pb.DeleteEx
 	}, nil
 
 }
+
+func (s *Server) GetStudentsByClassTeacher(ctx context.Context, req *pb.TeacherId) (*pb.Students, error) {
+	teacherId := req.GetId()
+
+	student, err := mongodb.GetStudentByTeacherIdFromDb(ctx, teacherId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.Students{Students: student}, nil
+}

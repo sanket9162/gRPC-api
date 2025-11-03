@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/sanket9162/grpc-api/internal/models"
+
 	"github.com/sanket9162/grpc-api/utils"
 )
 
@@ -65,7 +66,7 @@ func GetTeachersFromDB(ctx context.Context, sortOption bson.D, filter bson.M) ([
 	}
 	defer cursor.Close(ctx)
 
-	teachers, err := decodeEntities(ctx, cursor, func() *pb.Teacher { return &pb.Teacher{} }, func() *models.Teacher {
+	teachers, err := DecodeEntities(ctx, cursor, func() *pb.Teacher { return &pb.Teacher{} }, func() *models.Teacher {
 		return &models.Teacher{}
 	})
 	if err != nil {
