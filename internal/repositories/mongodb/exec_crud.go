@@ -155,3 +155,22 @@ func DeleteExecsFromDB(ctx context.Context, execsIdsToDelete []string) ([]string
 	}
 	return deletedIds, nil
 }
+
+func GetUserByUsername(ctx context.Context, req *pb.ExecLoginRequest) (*models.Exec, error) {
+	client, err := CreateMongoClient()
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "internal err")
+	}
+	defer client.Disconnect(ctx)
+
+	filter := bson.M{"username": req.GetUsername()}
+	var exec models.Exec
+	err = client.Database("school").Collection("execs").FindOne(ctx, filter).Decode(&exec)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, utils.ErrorHandler(err, "user not found, Incorrect username/password")
+		}
+		return nil, utils.ErrorHandler(err, "internal error")
+	}
+	return &exec, nil
+}

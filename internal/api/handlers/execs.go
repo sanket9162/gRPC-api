@@ -66,3 +66,26 @@ func (s *Server) DeleteTeachers(ctx context.Context, req *pb.TeacherIds) (*pb.De
 	}, nil
 
 }
+
+func (s *Server) Login(ctx context.Context, req *pb.ExecLoginRequest) (*pb.ExecLoginResponse, error) {
+	exec, err := mongodb.GetUserByUsername(ctx, req)
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "internal error")
+	}
+
+	if exec.InactiveStatus {
+		return nil, status.Error(codes.Unauthenticated, "Account is inactive")
+	}
+
+	err = utils.VerifyPassword(req.GetPassword(), exec.Password)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "incorrect username/password")
+	}
+
+	tokenString, err := utils.SignToken(exec.Id, exec.Username, exec.Role)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "Could not create token.")
+	}
+
+	return &pb.ExecLoginResponse{Status: true, Token: tokenString}, nil
+}
