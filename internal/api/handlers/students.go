@@ -63,12 +63,12 @@ func (s *Server) UpdateStudents(ctx context.Context, req *pb.Students) (*pb.Stud
 }
 
 func (s *Server) DeleteStudents(ctx context.Context, req *pb.StudentIds) (*pb.DeleteStudentsConfirmation, error) {
-	ids := req.GetIds()
-	var studentIdsToDelete []string
-	for _, v := range ids {
-		studentIdsToDelete = append(studentIdsToDelete, v.Id)
-	}
-	deletedIds, err := mongodb.DeleteTeacherFromDB(ctx, studentIdsToDelete)
+	// ids := req.GetIds()
+	// var studentIdsToDelete []string
+	// for _, v := range ids {
+	// 	studentIdsToDelete = append(studentIdsToDelete, req.GetIds())
+	// }
+	deletedIds, err := mongodb.DeleteTeacherFromDB(ctx, req.GetIds())
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

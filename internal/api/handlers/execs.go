@@ -7,6 +7,8 @@ import (
 	"github.com/sanket9162/grpc-api/internal/repositories/mongodb"
 	pb "github.com/sanket9162/grpc-api/proto/gen"
 	"github.com/sanket9162/grpc-api/utils"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -104,5 +106,33 @@ func (s *Server) UpdatePasswrod(ctx context.Context, req *pb.UpdatePasswordReque
 	return &pb.UpdatePasswordResponse{
 		PasswordUpdated: true,
 		Token:           token,
+	}, nil
+}
+
+func (s *Server) DeactivateUser(ctx context.Context, req *pb.ExecIds) (*pb.Confirmation, error) {
+	client, err := mongodb.CreateMongoClient()
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "internal error")
+	}
+	defer client.Disconnect(ctx)
+
+	var objectIds []primitive.ObjectID
+	for _, id := range req.GetIds() {
+		objId, err := primitive.ObjectIDFromHex(id)
+		if err != nil {
+			return nil, utils.ErrorHandler(err, "invalid Id")
+		}
+		objectIds = append(objectIds, objId)
+	}
+
+	filter := bson.M{"_id": bson.M{"$in": objectIds}}
+	update := bson.M{"$set": bson.M{"inactive_status": true}}
+	result, err := client.Database("school").Collection("execs").UpdateMany(ctx, filter, update)
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "failed to deactivate users")
+	}
+
+	return &pb.Confirmation{
+		Confirmation: result.ModifiedCount > 0,
 	}, nil
 }
