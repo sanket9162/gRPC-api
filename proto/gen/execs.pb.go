@@ -569,60 +569,16 @@ func (x *DeleteExecsConfirmation) GetDeletedIds() []string {
 	return nil
 }
 
-type ExecId struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ExecId) Reset() {
-	*x = ExecId{}
-	mi := &file_execs_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ExecId) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ExecId) ProtoMessage() {}
-
-func (x *ExecId) ProtoReflect() protoreflect.Message {
-	mi := &file_execs_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ExecId.ProtoReflect.Descriptor instead.
-func (*ExecId) Descriptor() ([]byte, []int) {
-	return file_execs_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *ExecId) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
 type ExecIds struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ids           []*ExecId              `protobuf:"bytes,1,rep,name=ids,proto3" json:"ids,omitempty"`
+	Ids           []string               `protobuf:"bytes,1,rep,name=ids,proto3" json:"ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ExecIds) Reset() {
 	*x = ExecIds{}
-	mi := &file_execs_proto_msgTypes[12]
+	mi := &file_execs_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -634,7 +590,7 @@ func (x *ExecIds) String() string {
 func (*ExecIds) ProtoMessage() {}
 
 func (x *ExecIds) ProtoReflect() protoreflect.Message {
-	mi := &file_execs_proto_msgTypes[12]
+	mi := &file_execs_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -647,10 +603,10 @@ func (x *ExecIds) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecIds.ProtoReflect.Descriptor instead.
 func (*ExecIds) Descriptor() ([]byte, []int) {
-	return file_execs_proto_rawDescGZIP(), []int{12}
+	return file_execs_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ExecIds) GetIds() []*ExecId {
+func (x *ExecIds) GetIds() []string {
 	if x != nil {
 		return x.Ids
 	}
@@ -667,7 +623,7 @@ type GetExecsRequest struct {
 
 func (x *GetExecsRequest) Reset() {
 	*x = GetExecsRequest{}
-	mi := &file_execs_proto_msgTypes[13]
+	mi := &file_execs_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -679,7 +635,7 @@ func (x *GetExecsRequest) String() string {
 func (*GetExecsRequest) ProtoMessage() {}
 
 func (x *GetExecsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_execs_proto_msgTypes[13]
+	mi := &file_execs_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -692,7 +648,7 @@ func (x *GetExecsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetExecsRequest.ProtoReflect.Descriptor instead.
 func (*GetExecsRequest) Descriptor() ([]byte, []int) {
-	return file_execs_proto_rawDescGZIP(), []int{13}
+	return file_execs_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetExecsRequest) GetExec() *Execs {
@@ -729,7 +685,7 @@ type Exec struct {
 
 func (x *Exec) Reset() {
 	*x = Exec{}
-	mi := &file_execs_proto_msgTypes[14]
+	mi := &file_execs_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -741,7 +697,7 @@ func (x *Exec) String() string {
 func (*Exec) ProtoMessage() {}
 
 func (x *Exec) ProtoReflect() protoreflect.Message {
-	mi := &file_execs_proto_msgTypes[14]
+	mi := &file_execs_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -754,7 +710,7 @@ func (x *Exec) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Exec.ProtoReflect.Descriptor instead.
 func (*Exec) Descriptor() ([]byte, []int) {
-	return file_execs_proto_rawDescGZIP(), []int{14}
+	return file_execs_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *Exec) GetId() string {
@@ -850,7 +806,7 @@ type Execs struct {
 
 func (x *Execs) Reset() {
 	*x = Execs{}
-	mi := &file_execs_proto_msgTypes[15]
+	mi := &file_execs_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -862,7 +818,7 @@ func (x *Execs) String() string {
 func (*Execs) ProtoMessage() {}
 
 func (x *Execs) ProtoReflect() protoreflect.Message {
-	mi := &file_execs_proto_msgTypes[15]
+	mi := &file_execs_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -875,7 +831,7 @@ func (x *Execs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Execs.ProtoReflect.Descriptor instead.
 func (*Execs) Descriptor() ([]byte, []int) {
-	return file_execs_proto_rawDescGZIP(), []int{15}
+	return file_execs_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Execs) GetExecs() []*Exec {
@@ -922,11 +878,9 @@ const file_execs_proto_rawDesc = "" +
 	"\x17DeleteExecsConfirmation\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\x12\x1f\n" +
 	"\vdeleted_ids\x18\x02 \x03(\tR\n" +
-	"deletedIds\"\x18\n" +
-	"\x06ExecId\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\")\n" +
-	"\aExecIds\x12\x1e\n" +
-	"\x03ids\x18\x01 \x03(\v2\f.main.ExecIdR\x03ids\"\\\n" +
+	"deletedIds\"\x1b\n" +
+	"\aExecIds\x12\x10\n" +
+	"\x03ids\x18\x01 \x03(\tR\x03ids\"\\\n" +
 	"\x0fGetExecsRequest\x12\x1f\n" +
 	"\x04Exec\x18\x01 \x01(\v2\v.main.ExecsR\x04Exec\x12(\n" +
 	"\asort_by\x18\x02 \x03(\v2\x0f.main.SortFieldR\x06sortBy\"\x9d\x03\n" +
@@ -972,7 +926,7 @@ func file_execs_proto_rawDescGZIP() []byte {
 	return file_execs_proto_rawDescData
 }
 
-var file_execs_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_execs_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_execs_proto_goTypes = []any{
 	(*ForgotPassowrdResponse)(nil),  // 0: main.ForgotPassowrdResponse
 	(*ForgotPasswordRequest)(nil),   // 1: main.ForgotPasswordRequest
@@ -985,43 +939,41 @@ var file_execs_proto_goTypes = []any{
 	(*ExecLoginResponse)(nil),       // 8: main.ExecLoginResponse
 	(*ExecLoginRequest)(nil),        // 9: main.ExecLoginRequest
 	(*DeleteExecsConfirmation)(nil), // 10: main.DeleteExecsConfirmation
-	(*ExecId)(nil),                  // 11: main.ExecId
-	(*ExecIds)(nil),                 // 12: main.ExecIds
-	(*GetExecsRequest)(nil),         // 13: main.GetExecsRequest
-	(*Exec)(nil),                    // 14: main.Exec
-	(*Execs)(nil),                   // 15: main.Execs
-	(*SortField)(nil),               // 16: main.SortField
+	(*ExecIds)(nil),                 // 11: main.ExecIds
+	(*GetExecsRequest)(nil),         // 12: main.GetExecsRequest
+	(*Exec)(nil),                    // 13: main.Exec
+	(*Execs)(nil),                   // 14: main.Execs
+	(*SortField)(nil),               // 15: main.SortField
 }
 var file_execs_proto_depIdxs = []int32{
-	11, // 0: main.ExecIds.ids:type_name -> main.ExecId
-	15, // 1: main.GetExecsRequest.Exec:type_name -> main.Execs
-	16, // 2: main.GetExecsRequest.sort_by:type_name -> main.SortField
-	14, // 3: main.Execs.execs:type_name -> main.Exec
-	13, // 4: main.ExecsService.GetExecs:input_type -> main.GetExecsRequest
-	15, // 5: main.ExecsService.AddExecs:input_type -> main.Execs
-	15, // 6: main.ExecsService.UpdateExecs:input_type -> main.Execs
-	12, // 7: main.ExecsService.DeleteExecs:input_type -> main.ExecIds
-	9,  // 8: main.ExecsService.Login:input_type -> main.ExecLoginRequest
-	7,  // 9: main.ExecsService.Logout:input_type -> main.EmptyRequest
-	5,  // 10: main.ExecsService.UpdatePasswrod:input_type -> main.UpdatePasswordRequest
-	3,  // 11: main.ExecsService.ResetPassword:input_type -> main.ResetPasswordRequest
-	1,  // 12: main.ExecsService.ForgotPassword:input_type -> main.ForgotPasswordRequest
-	12, // 13: main.ExecsService.DeactivateUser:input_type -> main.ExecIds
-	15, // 14: main.ExecsService.GetExecs:output_type -> main.Execs
-	15, // 15: main.ExecsService.AddExecs:output_type -> main.Execs
-	15, // 16: main.ExecsService.UpdateExecs:output_type -> main.Execs
-	10, // 17: main.ExecsService.DeleteExecs:output_type -> main.DeleteExecsConfirmation
-	8,  // 18: main.ExecsService.Login:output_type -> main.ExecLoginResponse
-	6,  // 19: main.ExecsService.Logout:output_type -> main.ExecLogoutResponse
-	4,  // 20: main.ExecsService.UpdatePasswrod:output_type -> main.UpdatePasswordResponse
-	2,  // 21: main.ExecsService.ResetPassword:output_type -> main.Confirmation
-	0,  // 22: main.ExecsService.ForgotPassword:output_type -> main.ForgotPassowrdResponse
-	2,  // 23: main.ExecsService.DeactivateUser:output_type -> main.Confirmation
-	14, // [14:24] is the sub-list for method output_type
-	4,  // [4:14] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	14, // 0: main.GetExecsRequest.Exec:type_name -> main.Execs
+	15, // 1: main.GetExecsRequest.sort_by:type_name -> main.SortField
+	13, // 2: main.Execs.execs:type_name -> main.Exec
+	12, // 3: main.ExecsService.GetExecs:input_type -> main.GetExecsRequest
+	14, // 4: main.ExecsService.AddExecs:input_type -> main.Execs
+	14, // 5: main.ExecsService.UpdateExecs:input_type -> main.Execs
+	11, // 6: main.ExecsService.DeleteExecs:input_type -> main.ExecIds
+	9,  // 7: main.ExecsService.Login:input_type -> main.ExecLoginRequest
+	7,  // 8: main.ExecsService.Logout:input_type -> main.EmptyRequest
+	5,  // 9: main.ExecsService.UpdatePasswrod:input_type -> main.UpdatePasswordRequest
+	3,  // 10: main.ExecsService.ResetPassword:input_type -> main.ResetPasswordRequest
+	1,  // 11: main.ExecsService.ForgotPassword:input_type -> main.ForgotPasswordRequest
+	11, // 12: main.ExecsService.DeactivateUser:input_type -> main.ExecIds
+	14, // 13: main.ExecsService.GetExecs:output_type -> main.Execs
+	14, // 14: main.ExecsService.AddExecs:output_type -> main.Execs
+	14, // 15: main.ExecsService.UpdateExecs:output_type -> main.Execs
+	10, // 16: main.ExecsService.DeleteExecs:output_type -> main.DeleteExecsConfirmation
+	8,  // 17: main.ExecsService.Login:output_type -> main.ExecLoginResponse
+	6,  // 18: main.ExecsService.Logout:output_type -> main.ExecLogoutResponse
+	4,  // 19: main.ExecsService.UpdatePasswrod:output_type -> main.UpdatePasswordResponse
+	2,  // 20: main.ExecsService.ResetPassword:output_type -> main.Confirmation
+	0,  // 21: main.ExecsService.ForgotPassword:output_type -> main.ForgotPassowrdResponse
+	2,  // 22: main.ExecsService.DeactivateUser:output_type -> main.Confirmation
+	13, // [13:23] is the sub-list for method output_type
+	3,  // [3:13] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_execs_proto_init() }
@@ -1036,7 +988,7 @@ func file_execs_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_execs_proto_rawDesc), len(file_execs_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
