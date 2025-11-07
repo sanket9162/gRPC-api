@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 
 	"github.com/sanket9162/grpc-api/internal/models"
 	"github.com/sanket9162/grpc-api/internal/repositories/mongodb"
@@ -129,5 +131,30 @@ func (s *Server) ForgotPassword(ctx context.Context, req *pb.ForgotPasswordReque
 	return &pb.ForgotPassowrdResponse{
 		Confiramtion: true,
 		Message:      message,
+	}, nil
+}
+
+func (s *Server) ResetPassword(ctx context.Context, req *pb.ResetPasswordRequest) (*pb.Confirmation, error) {
+	token := req.GetResetCode()
+
+	if req.GetNew_Password() != req.GetConfirmPassword() {
+		return nil, status.Error(codes.InvalidArgument, "passowrds do not match")
+	}
+
+	bytes, err := hex.DecodeString(token)
+	if err != nil {
+		return nil, utils.ErrorHandler(err, "internal error")
+	}
+
+	hashedToken := sha256.Sum256(bytes)
+	tokenInDb := hex.EncodeToString(hashedToken[:])
+
+	err = mongodb.ResetPasswordDB(ctx, tokenInDb, req.GetNew_Password())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.Confirmation{
+		Confirmation: true,
 	}, nil
 }
