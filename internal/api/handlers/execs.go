@@ -4,12 +4,17 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/sanket9162/grpc-api/internal/models"
 	"github.com/sanket9162/grpc-api/internal/repositories/mongodb"
 	pb "github.com/sanket9162/grpc-api/proto/gen"
 	"github.com/sanket9162/grpc-api/utils"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -156,5 +161,40 @@ func (s *Server) ResetPassword(ctx context.Context, req *pb.ResetPasswordRequest
 
 	return &pb.Confirmation{
 		Confirmation: true,
+	}, nil
+}
+
+func (s *Server) Logout(ctx context.Context, req *pb.EmptyRequest) (*pb.ExecLogoutResponse, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, "Unauthrized Access")
+	}
+
+	val, ok := md["authorization"]
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorization Access")
+	}
+
+	token := strings.TrimPrefix(val[0], "Bearer ")
+
+	if token == "" {
+		return nil, status.Error(codes.Unauthenticated, "Unauthorization Access")
+	}
+
+	expiryTimeStamp := ctx.Value(utils.ContextKey("exporesAt"))
+	expiryTimeStr := fmt.Sprintf("%v", expiryTimeStamp)
+
+	expiryTimeint, err := strconv.ParseInt(expiryTimeStr, 10, 64)
+	if err != nil {
+		utils.ErrorHandler(err, "")
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+
+	expiryTime := time.Unix(expiryTimeint, 0)
+
+	utils.JwtStore.AddToken(token, expiryTime)
+
+	return &pb.ExecLogoutResponse{
+		LoggedOut: true,
 	}, nil
 }
