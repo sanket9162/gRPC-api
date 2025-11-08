@@ -7,6 +7,7 @@
 package grpcapipb
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -21,28 +22,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type ForgotPassowrdResponse struct {
+type ForgotPasswordResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Confiramtion  bool                   `protobuf:"varint,1,opt,name=confiramtion,proto3" json:"confiramtion,omitempty"`
+	Confirmation  bool                   `protobuf:"varint,1,opt,name=confirmation,proto3" json:"confirmation,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ForgotPassowrdResponse) Reset() {
-	*x = ForgotPassowrdResponse{}
+func (x *ForgotPasswordResponse) Reset() {
+	*x = ForgotPasswordResponse{}
 	mi := &file_execs_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ForgotPassowrdResponse) String() string {
+func (x *ForgotPasswordResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ForgotPassowrdResponse) ProtoMessage() {}
+func (*ForgotPasswordResponse) ProtoMessage() {}
 
-func (x *ForgotPassowrdResponse) ProtoReflect() protoreflect.Message {
+func (x *ForgotPasswordResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_execs_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,19 +55,19 @@ func (x *ForgotPassowrdResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ForgotPassowrdResponse.ProtoReflect.Descriptor instead.
-func (*ForgotPassowrdResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ForgotPasswordResponse.ProtoReflect.Descriptor instead.
+func (*ForgotPasswordResponse) Descriptor() ([]byte, []int) {
 	return file_execs_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ForgotPassowrdResponse) GetConfiramtion() bool {
+func (x *ForgotPasswordResponse) GetConfirmation() bool {
 	if x != nil {
-		return x.Confiramtion
+		return x.Confirmation
 	}
 	return false
 }
 
-func (x *ForgotPassowrdResponse) GetMessage() string {
+func (x *ForgotPasswordResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
@@ -164,7 +165,7 @@ func (x *Confirmation) GetConfirmation() bool {
 type ResetPasswordRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ResetCode       string                 `protobuf:"bytes,1,opt,name=reset_code,json=resetCode,proto3" json:"reset_code,omitempty"`
-	New_Password    string                 `protobuf:"bytes,2,opt,name=new_Password,json=newPassword,proto3" json:"new_Password,omitempty"`
+	NewPassword     string                 `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
 	ConfirmPassword string                 `protobuf:"bytes,3,opt,name=confirm_password,json=confirmPassword,proto3" json:"confirm_password,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -207,9 +208,9 @@ func (x *ResetPasswordRequest) GetResetCode() string {
 	return ""
 }
 
-func (x *ResetPasswordRequest) GetNew_Password() string {
+func (x *ResetPasswordRequest) GetNewPassword() string {
 	if x != nil {
-		return x.New_Password
+		return x.NewPassword
 	}
 	return ""
 }
@@ -615,7 +616,7 @@ func (x *ExecIds) GetIds() []string {
 
 type GetExecsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Exec          *Execs                 `protobuf:"bytes,1,opt,name=Exec,proto3" json:"Exec,omitempty"`
+	Exec          *Exec                  `protobuf:"bytes,1,opt,name=exec,proto3" json:"exec,omitempty"`
 	SortBy        []*SortField           `protobuf:"bytes,2,rep,name=sort_by,json=sortBy,proto3" json:"sort_by,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -651,7 +652,7 @@ func (*GetExecsRequest) Descriptor() ([]byte, []int) {
 	return file_execs_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *GetExecsRequest) GetExec() *Execs {
+func (x *GetExecsRequest) GetExec() *Exec {
 	if x != nil {
 		return x.Exec
 	}
@@ -845,9 +846,9 @@ var File_execs_proto protoreflect.FileDescriptor
 
 const file_execs_proto_rawDesc = "" +
 	"\n" +
-	"\vexecs.proto\x12\x04main\x1a\x0estudents.proto\"V\n" +
-	"\x16ForgotPassowrdResponse\x12\"\n" +
-	"\fconfiramtion\x18\x01 \x01(\bR\fconfiramtion\x12\x18\n" +
+	"\vexecs.proto\x12\x04main\x1a\x0estudents.proto\x1a\x17validate/validate.proto\"V\n" +
+	"\x16ForgotPasswordResponse\x12\"\n" +
+	"\fconfirmation\x18\x01 \x01(\bR\fconfirmation\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"-\n" +
 	"\x15ForgotPasswordRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\"2\n" +
@@ -856,7 +857,7 @@ const file_execs_proto_rawDesc = "" +
 	"\x14ResetPasswordRequest\x12\x1d\n" +
 	"\n" +
 	"reset_code\x18\x01 \x01(\tR\tresetCode\x12!\n" +
-	"\fnew_Password\x18\x02 \x01(\tR\vnewPassword\x12)\n" +
+	"\fnew_password\x18\x02 \x01(\tR\vnewPassword\x12)\n" +
 	"\x10confirm_password\x18\x03 \x01(\tR\x0fconfirmPassword\"Y\n" +
 	"\x16UpdatePasswordResponse\x12)\n" +
 	"\x10password_updated\x18\x01 \x01(\bR\x0fpasswordUpdated\x12\x14\n" +
@@ -871,27 +872,28 @@ const file_execs_proto_rawDesc = "" +
 	"\fEmptyRequest\"A\n" +
 	"\x11ExecLoginResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\bR\x06status\x12\x14\n" +
-	"\x05token\x18\x02 \x01(\tR\x05token\"J\n" +
-	"\x10ExecLoginRequest\x12\x1a\n" +
-	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"R\n" +
+	"\x05token\x18\x02 \x01(\tR\x05token\"\x8e\x01\n" +
+	"\x10ExecLoginRequest\x12<\n" +
+	"\busername\x18\x01 \x01(\tB \xfaB\x1dr\x1b\x10\x062\x14^[a-zA-Z0-9@.#$+-]+$\xd0\x01\x00R\busername\x12<\n" +
+	"\bpassword\x18\x02 \x01(\tB \xfaB\x1dr\x1b\x10\t2\x14^[a-zA-Z0-9@.#$+-]+$\xd0\x01\x00R\bpassword\"R\n" +
 	"\x17DeleteExecsConfirmation\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\x12\x1f\n" +
 	"\vdeleted_ids\x18\x02 \x03(\tR\n" +
 	"deletedIds\"\x1b\n" +
 	"\aExecIds\x12\x10\n" +
-	"\x03ids\x18\x01 \x03(\tR\x03ids\"\\\n" +
-	"\x0fGetExecsRequest\x12\x1f\n" +
-	"\x04Exec\x18\x01 \x01(\v2\v.main.ExecsR\x04Exec\x12(\n" +
-	"\asort_by\x18\x02 \x03(\v2\x0f.main.SortFieldR\x06sortBy\"\x9d\x03\n" +
+	"\x03ids\x18\x01 \x03(\tR\x03ids\"[\n" +
+	"\x0fGetExecsRequest\x12\x1e\n" +
+	"\x04exec\x18\x01 \x01(\v2\n" +
+	".main.ExecR\x04exec\x12(\n" +
+	"\asort_by\x18\x02 \x03(\v2\x0f.main.SortFieldR\x06sortBy\"\x92\x04\n" +
 	"\x04Exec\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x124\n" +
 	"\n" +
-	"first_name\x18\x02 \x01(\tR\tfirstName\x12\x1b\n" +
-	"\tlast_name\x18\x03 \x01(\tR\blastName\x12\x14\n" +
-	"\x05email\x18\x04 \x01(\tR\x05email\x12\x1a\n" +
-	"\busername\x18\x05 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x06 \x01(\tR\bpassword\x12.\n" +
+	"first_name\x18\x02 \x01(\tB\x15\xfaB\x12r\x10\x10\x012\f^[a-zA-Z ]+$R\tfirstName\x122\n" +
+	"\tlast_name\x18\x03 \x01(\tB\x15\xfaB\x12r\x10\x10\x012\f^[a-zA-Z ]+$R\blastName\x12\x1d\n" +
+	"\x05email\x18\x04 \x01(\tB\a\xfaB\x04r\x02`\x01R\x05email\x129\n" +
+	"\busername\x18\x05 \x01(\tB\x1d\xfaB\x1ar\x18\x10\x062\x14^[a-zA-Z0-9@.#$+-]+$R\busername\x129\n" +
+	"\bpassword\x18\x06 \x01(\tB\x1d\xfaB\x1ar\x18\x10\t2\x14^[a-zA-Z0-9@.#$+-]+$R\bpassword\x12.\n" +
 	"\x13password_changed_at\x18\a \x01(\tR\x11passwordChangedAt\x12&\n" +
 	"\x0fuser_created_at\x18\b \x01(\tR\ruserCreatedAt\x120\n" +
 	"\x14password_reset_token\x18\t \x01(\tR\x12passwordResetToken\x124\n" +
@@ -909,9 +911,9 @@ const file_execs_proto_rawDesc = "" +
 	"\vDeleteExecs\x12\r.main.ExecIds\x1a\x1d.main.DeleteExecsConfirmation\x128\n" +
 	"\x05Login\x12\x16.main.ExecLoginRequest\x1a\x17.main.ExecLoginResponse\x126\n" +
 	"\x06Logout\x12\x12.main.EmptyRequest\x1a\x18.main.ExecLogoutResponse\x12K\n" +
-	"\x0eUpdatePasswrod\x12\x1b.main.UpdatePasswordRequest\x1a\x1c.main.UpdatePasswordResponse\x12?\n" +
+	"\x0eUpdatePassword\x12\x1b.main.UpdatePasswordRequest\x1a\x1c.main.UpdatePasswordResponse\x12?\n" +
 	"\rResetPassword\x12\x1a.main.ResetPasswordRequest\x1a\x12.main.Confirmation\x12K\n" +
-	"\x0eForgotPassword\x12\x1b.main.ForgotPasswordRequest\x1a\x1c.main.ForgotPassowrdResponse\x123\n" +
+	"\x0eForgotPassword\x12\x1b.main.ForgotPasswordRequest\x1a\x1c.main.ForgotPasswordResponse\x123\n" +
 	"\x0eDeactivateUser\x12\r.main.ExecIds\x1a\x12.main.ConfirmationB\x16Z\x14/proto/gen;grpcapipbb\x06proto3"
 
 var (
@@ -928,7 +930,7 @@ func file_execs_proto_rawDescGZIP() []byte {
 
 var file_execs_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_execs_proto_goTypes = []any{
-	(*ForgotPassowrdResponse)(nil),  // 0: main.ForgotPassowrdResponse
+	(*ForgotPasswordResponse)(nil),  // 0: main.ForgotPasswordResponse
 	(*ForgotPasswordRequest)(nil),   // 1: main.ForgotPasswordRequest
 	(*Confirmation)(nil),            // 2: main.Confirmation
 	(*ResetPasswordRequest)(nil),    // 3: main.ResetPasswordRequest
@@ -946,7 +948,7 @@ var file_execs_proto_goTypes = []any{
 	(*SortField)(nil),               // 15: main.SortField
 }
 var file_execs_proto_depIdxs = []int32{
-	14, // 0: main.GetExecsRequest.Exec:type_name -> main.Execs
+	13, // 0: main.GetExecsRequest.exec:type_name -> main.Exec
 	15, // 1: main.GetExecsRequest.sort_by:type_name -> main.SortField
 	13, // 2: main.Execs.execs:type_name -> main.Exec
 	12, // 3: main.ExecsService.GetExecs:input_type -> main.GetExecsRequest
@@ -955,7 +957,7 @@ var file_execs_proto_depIdxs = []int32{
 	11, // 6: main.ExecsService.DeleteExecs:input_type -> main.ExecIds
 	9,  // 7: main.ExecsService.Login:input_type -> main.ExecLoginRequest
 	7,  // 8: main.ExecsService.Logout:input_type -> main.EmptyRequest
-	5,  // 9: main.ExecsService.UpdatePasswrod:input_type -> main.UpdatePasswordRequest
+	5,  // 9: main.ExecsService.UpdatePassword:input_type -> main.UpdatePasswordRequest
 	3,  // 10: main.ExecsService.ResetPassword:input_type -> main.ResetPasswordRequest
 	1,  // 11: main.ExecsService.ForgotPassword:input_type -> main.ForgotPasswordRequest
 	11, // 12: main.ExecsService.DeactivateUser:input_type -> main.ExecIds
@@ -965,9 +967,9 @@ var file_execs_proto_depIdxs = []int32{
 	10, // 16: main.ExecsService.DeleteExecs:output_type -> main.DeleteExecsConfirmation
 	8,  // 17: main.ExecsService.Login:output_type -> main.ExecLoginResponse
 	6,  // 18: main.ExecsService.Logout:output_type -> main.ExecLogoutResponse
-	4,  // 19: main.ExecsService.UpdatePasswrod:output_type -> main.UpdatePasswordResponse
+	4,  // 19: main.ExecsService.UpdatePassword:output_type -> main.UpdatePasswordResponse
 	2,  // 20: main.ExecsService.ResetPassword:output_type -> main.Confirmation
-	0,  // 21: main.ExecsService.ForgotPassword:output_type -> main.ForgotPassowrdResponse
+	0,  // 21: main.ExecsService.ForgotPassword:output_type -> main.ForgotPasswordResponse
 	2,  // 22: main.ExecsService.DeactivateUser:output_type -> main.Confirmation
 	13, // [13:23] is the sub-list for method output_type
 	3,  // [3:13] is the sub-list for method input_type

@@ -25,7 +25,7 @@ const (
 	ExecsService_DeleteExecs_FullMethodName    = "/main.ExecsService/DeleteExecs"
 	ExecsService_Login_FullMethodName          = "/main.ExecsService/Login"
 	ExecsService_Logout_FullMethodName         = "/main.ExecsService/Logout"
-	ExecsService_UpdatePasswrod_FullMethodName = "/main.ExecsService/UpdatePasswrod"
+	ExecsService_UpdatePassword_FullMethodName = "/main.ExecsService/UpdatePassword"
 	ExecsService_ResetPassword_FullMethodName  = "/main.ExecsService/ResetPassword"
 	ExecsService_ForgotPassword_FullMethodName = "/main.ExecsService/ForgotPassword"
 	ExecsService_DeactivateUser_FullMethodName = "/main.ExecsService/DeactivateUser"
@@ -41,9 +41,9 @@ type ExecsServiceClient interface {
 	DeleteExecs(ctx context.Context, in *ExecIds, opts ...grpc.CallOption) (*DeleteExecsConfirmation, error)
 	Login(ctx context.Context, in *ExecLoginRequest, opts ...grpc.CallOption) (*ExecLoginResponse, error)
 	Logout(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*ExecLogoutResponse, error)
-	UpdatePasswrod(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error)
+	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error)
 	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*Confirmation, error)
-	ForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPassowrdResponse, error)
+	ForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error)
 	DeactivateUser(ctx context.Context, in *ExecIds, opts ...grpc.CallOption) (*Confirmation, error)
 }
 
@@ -115,10 +115,10 @@ func (c *execsServiceClient) Logout(ctx context.Context, in *EmptyRequest, opts 
 	return out, nil
 }
 
-func (c *execsServiceClient) UpdatePasswrod(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error) {
+func (c *execsServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdatePasswordResponse)
-	err := c.cc.Invoke(ctx, ExecsService_UpdatePasswrod_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ExecsService_UpdatePassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,9 +135,9 @@ func (c *execsServiceClient) ResetPassword(ctx context.Context, in *ResetPasswor
 	return out, nil
 }
 
-func (c *execsServiceClient) ForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPassowrdResponse, error) {
+func (c *execsServiceClient) ForgotPassword(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ForgotPassowrdResponse)
+	out := new(ForgotPasswordResponse)
 	err := c.cc.Invoke(ctx, ExecsService_ForgotPassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -165,9 +165,9 @@ type ExecsServiceServer interface {
 	DeleteExecs(context.Context, *ExecIds) (*DeleteExecsConfirmation, error)
 	Login(context.Context, *ExecLoginRequest) (*ExecLoginResponse, error)
 	Logout(context.Context, *EmptyRequest) (*ExecLogoutResponse, error)
-	UpdatePasswrod(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
+	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
 	ResetPassword(context.Context, *ResetPasswordRequest) (*Confirmation, error)
-	ForgotPassword(context.Context, *ForgotPasswordRequest) (*ForgotPassowrdResponse, error)
+	ForgotPassword(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error)
 	DeactivateUser(context.Context, *ExecIds) (*Confirmation, error)
 	mustEmbedUnimplementedExecsServiceServer()
 }
@@ -197,13 +197,13 @@ func (UnimplementedExecsServiceServer) Login(context.Context, *ExecLoginRequest)
 func (UnimplementedExecsServiceServer) Logout(context.Context, *EmptyRequest) (*ExecLogoutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedExecsServiceServer) UpdatePasswrod(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePasswrod not implemented")
+func (UnimplementedExecsServiceServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
 }
 func (UnimplementedExecsServiceServer) ResetPassword(context.Context, *ResetPasswordRequest) (*Confirmation, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
-func (UnimplementedExecsServiceServer) ForgotPassword(context.Context, *ForgotPasswordRequest) (*ForgotPassowrdResponse, error) {
+func (UnimplementedExecsServiceServer) ForgotPassword(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ForgotPassword not implemented")
 }
 func (UnimplementedExecsServiceServer) DeactivateUser(context.Context, *ExecIds) (*Confirmation, error) {
@@ -338,20 +338,20 @@ func _ExecsService_Logout_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExecsService_UpdatePasswrod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ExecsService_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdatePasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExecsServiceServer).UpdatePasswrod(ctx, in)
+		return srv.(ExecsServiceServer).UpdatePassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ExecsService_UpdatePasswrod_FullMethodName,
+		FullMethod: ExecsService_UpdatePassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExecsServiceServer).UpdatePasswrod(ctx, req.(*UpdatePasswordRequest))
+		return srv.(ExecsServiceServer).UpdatePassword(ctx, req.(*UpdatePasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -442,8 +442,8 @@ var ExecsService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ExecsService_Logout_Handler,
 		},
 		{
-			MethodName: "UpdatePasswrod",
-			Handler:    _ExecsService_UpdatePasswrod_Handler,
+			MethodName: "UpdatePassword",
+			Handler:    _ExecsService_UpdatePassword_Handler,
 		},
 		{
 			MethodName: "ResetPassword",

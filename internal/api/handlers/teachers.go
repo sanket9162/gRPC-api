@@ -12,6 +12,10 @@ import (
 )
 
 func (s *Server) AddTeachers(ctx context.Context, req *pb.Teachers) (*pb.Teachers, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
 
 	for _, teacher := range req.GetTeachers() {
 		if teacher.Id != "" {
@@ -28,6 +32,11 @@ func (s *Server) AddTeachers(ctx context.Context, req *pb.Teachers) (*pb.Teacher
 }
 
 func (s *Server) GetTeachers(ctx context.Context, req *pb.GetTeachersRequest) (*pb.Teachers, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	filter, err := filter(req.Teacher, &models.Teacher{})
 	if err != nil {
 		return nil, utils.ErrorHandler(err, "Internal err")
@@ -43,6 +52,10 @@ func (s *Server) GetTeachers(ctx context.Context, req *pb.GetTeachersRequest) (*
 }
 
 func (s *Server) UpdateTeachers(ctx context.Context, req *pb.Teachers) (*pb.Teachers, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
 
 	updatedTeachers, err := mongodb.UpdateTeachersInDB(ctx, req.Teachers)
 	if err != nil {
@@ -52,6 +65,11 @@ func (s *Server) UpdateTeachers(ctx context.Context, req *pb.Teachers) (*pb.Teac
 }
 
 func (s *Server) DeleteExecs(ctx context.Context, req *pb.ExecIds) (*pb.DeleteExecsConfirmation, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	// ids := req.GetIds()
 	// var execsIdsToDelete []string
 	// for _, excesId := range ids {
@@ -70,6 +88,11 @@ func (s *Server) DeleteExecs(ctx context.Context, req *pb.ExecIds) (*pb.DeleteEx
 }
 
 func (s *Server) GetStudentsByClassTeacher(ctx context.Context, req *pb.TeacherId) (*pb.Students, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	teacherId := req.GetId()
 
 	student, err := mongodb.GetStudentByTeacherIdFromDb(ctx, teacherId)
@@ -81,6 +104,11 @@ func (s *Server) GetStudentsByClassTeacher(ctx context.Context, req *pb.TeacherI
 }
 
 func (s *Server) GetStudentcountByClassTeacher(ctx context.Context, req *pb.TeacherId) (*pb.StudentCount, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	teacherId := req.GetId()
 
 	count, err := mongodb.GetStudentCountByTeacherIDFromDB(ctx, teacherId)

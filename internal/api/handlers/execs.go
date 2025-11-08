@@ -19,6 +19,11 @@ import (
 )
 
 func (s *Server) AddExecs(ctx context.Context, req *pb.Execs) (*pb.Execs, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	for _, teacher := range req.GetExecs() {
 		if teacher.Id != "" {
 			return nil, status.Error(codes.InvalidArgument, "request is in incorrect format: non-empty ID fields are not allowed")
@@ -33,8 +38,12 @@ func (s *Server) AddExecs(ctx context.Context, req *pb.Execs) (*pb.Execs, error)
 }
 
 func (s *Server) GetExecs(ctx context.Context, req *pb.GetExecsRequest) (*pb.Execs, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
 
-	err := utils.AuthorizeUser(ctx, "admin", "manager")
+	err = utils.AuthorizeUser(ctx, "admin", "manager")
 	if err != nil {
 		return nil, utils.ErrorHandler(err, err.Error())
 	}
@@ -54,6 +63,10 @@ func (s *Server) GetExecs(ctx context.Context, req *pb.GetExecsRequest) (*pb.Exe
 }
 
 func (s *Server) UpdateExecs(ctx context.Context, req *pb.Execs) (*pb.Execs, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
 
 	updatedExecs, err := mongodb.UpdateExecsInDB(ctx, req.Execs)
 	if err != nil {
@@ -81,6 +94,11 @@ func (s *Server) DeleteTeachers(ctx context.Context, req *pb.TeacherIds) (*pb.De
 }
 
 func (s *Server) Login(ctx context.Context, req *pb.ExecLoginRequest) (*pb.ExecLoginResponse, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	exec, err := mongodb.GetUserByUsername(ctx, req)
 	if err != nil {
 		return nil, utils.ErrorHandler(err, "internal error")
@@ -131,7 +149,7 @@ func (s *Server) DeactivateUser(ctx context.Context, req *pb.ExecIds) (*pb.Confi
 	}, nil
 }
 
-func (s *Server) ForgotPassword(ctx context.Context, req *pb.ForgotPasswordRequest) (*pb.ForgotPassowrdResponse, error) {
+func (s *Server) ForgotPassword(ctx context.Context, req *pb.ForgotPasswordRequest) (*pb.ForgotPasswordResponse, error) {
 	email := req.GetEmail()
 
 	message, err := mongodb.ForgotpasswordDb(ctx, email)
@@ -139,8 +157,8 @@ func (s *Server) ForgotPassword(ctx context.Context, req *pb.ForgotPasswordReque
 		return nil, err
 	}
 
-	return &pb.ForgotPassowrdResponse{
-		Confiramtion: true,
+	return &pb.ForgotPasswordResponse{
+		Confirmation: true,
 		Message:      message,
 	}, nil
 }
@@ -148,7 +166,7 @@ func (s *Server) ForgotPassword(ctx context.Context, req *pb.ForgotPasswordReque
 func (s *Server) ResetPassword(ctx context.Context, req *pb.ResetPasswordRequest) (*pb.Confirmation, error) {
 	token := req.GetResetCode()
 
-	if req.GetNew_Password() != req.GetConfirmPassword() {
+	if req.GetNewPassword() != req.GetConfirmPassword() {
 		return nil, status.Error(codes.InvalidArgument, "passowrds do not match")
 	}
 
@@ -160,7 +178,7 @@ func (s *Server) ResetPassword(ctx context.Context, req *pb.ResetPasswordRequest
 	hashedToken := sha256.Sum256(bytes)
 	tokenInDb := hex.EncodeToString(hashedToken[:])
 
-	err = mongodb.ResetPasswordDB(ctx, tokenInDb, req.GetNew_Password())
+	err = mongodb.ResetPasswordDB(ctx, tokenInDb, req.GetNewPassword())
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
