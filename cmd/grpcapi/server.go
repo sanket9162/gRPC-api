@@ -25,7 +25,7 @@ func main() {
 		log.Fatal("Error loading .env file:", err)
 	}
 
-	s := grpc.NewServer(grpc.ChainUnaryInterceptor(interceptors.ResponseTimeInterceptor, interceptors.NewRateLimiter(5, time.Minute).RateLimiterInterceprot))
+	s := grpc.NewServer(grpc.ChainUnaryInterceptor(interceptors.ResponseTimeInterceptor, interceptors.NewRateLimiter(5, time.Minute).RateLimiterInterceprot, interceptors.AuthenticationInterceptor))
 
 	pb.RegisterExecsServiceServer(s, &handlers.Server{})
 	pb.RegisterStudentsServiceServer(s, &handlers.Server{})
