@@ -33,6 +33,12 @@ func (s *Server) AddExecs(ctx context.Context, req *pb.Execs) (*pb.Execs, error)
 }
 
 func (s *Server) GetExecs(ctx context.Context, req *pb.GetExecsRequest) (*pb.Execs, error) {
+
+	err := utils.AuthorizeUser(ctx, "admin", "manager")
+	if err != nil {
+		return nil, utils.ErrorHandler(err, err.Error())
+	}
+
 	filter, err := filter(req.Exec, &models.Exec{})
 	if err != nil {
 		return nil, utils.ErrorHandler(err, "Internal err")
