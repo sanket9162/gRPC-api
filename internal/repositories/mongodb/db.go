@@ -12,7 +12,7 @@ import (
 func CreateMongoClient() (*mongo.Client, error) {
 	ctx := context.Background()
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb+srv://sanket:sanket@cluster0.hry3uhm.mongodb.net/"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(""))
 	if err != nil {
 		return nil, utils.ErrorHandler(err, "unable to connect to database")
 	}
